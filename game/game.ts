@@ -23,16 +23,12 @@ window.onload = ()=>{
 
 
 
-    for (let index = 0; index < 32; index++) {
-        if (index % 2 == 0)
-            continue;
-
-        world_manager.addPart(new Powder(new Vector2(5,index)));  
+    for (let x = 0; x < 200; x++) {     
+        for (let y = 0; y < 200; y++) {     
+            world_manager.addPart(new Powder(new Vector2(x,y)));  
+        }
     }
 
-    for (let index = 0; index < 11; index++) {
-        world_manager.addPart(new Solid(new Vector2(index,49)));        
-    }
  
 };
 
