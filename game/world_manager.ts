@@ -25,7 +25,27 @@ export var world = new World();
 
 
 export class WorldManager extends Drawable{  
-    onUpdate(){
+    onUpdate(){        
+    }
+    
+    onRender(){
+        this.physicsStep();
+        super.onRender();
+
+        for (let y = 0; y < WorldSize.y; y++) {            
+            for (let x = 0; x < WorldSize.x; x++) {
+                let part = world.particles[y][x]
+
+                if (!part || !ctx)
+                    continue;
+
+                ctx.fillStyle = part.color;
+                ctx.fillRect(x,y,1,1); //draw rectangle :P
+            }
+        }
+    }    
+
+    physicsStep(){
         ctx = this.ctx;
 
         if(!world.particles)
@@ -59,22 +79,6 @@ export class WorldManager extends Drawable{
         }
         world = bufferWorld;
     }
-    
-    onRender(){
-        super.onRender();
-
-        for (let y = 0; y < WorldSize.y; y++) {            
-            for (let x = 0; x < WorldSize.x; x++) {
-                let part = world.particles[y][x]
-
-                if (!part || !ctx)
-                    continue;
-
-                ctx.fillStyle = part.color;
-                ctx.fillRect(x,y,1,1); //draw rectangle :P
-            }
-        }
-    }    
 
     addPart(part: Particle){        
         world.particles[part.position.y][part.position.x] = part;
