@@ -1,0 +1,20 @@
+{
+  "name": "powder-ts",
+  "author": {
+    "name": "Maticzpl"
+  },
+  "version": "1.0.0",
+  "description": "Falling Sand game in ts",
+  "dependencies": {
+    "typescript": "^4.2.2",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^8.0.17"
+  },
+  "scripts": {
+    "watch": "webpack --watch --progress",
+    "compile": "webpack"
+  }
+}
