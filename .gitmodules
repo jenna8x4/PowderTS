@@ -1,0 +1,3 @@
+[submodule "Canvas-Engine"]
+	path = Canvas-Engine
+	url = https://github.com/Maticzpl/Canvas-Engine
