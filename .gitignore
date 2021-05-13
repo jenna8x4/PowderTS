@@ -88,5 +88,5 @@ typings/
 .dynamodb/
 
 # compiled javascript
-src/*.js
-dist/*
+#src/*.js
+#dist/*
