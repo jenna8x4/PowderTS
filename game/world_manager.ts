@@ -12,7 +12,7 @@ export class World{
 
 
         for (let index = 0; index < this.particles.length; index++) {            
-            this.particles[index] = new Array(WorldSize.x);
+            this.particles[index] = new Array(WorldSize.x).fill(undefined);
         }
     }
 
@@ -22,7 +22,7 @@ export class World{
 
 export var world = new World();
 
-//TODO: Multithreading lol
+//TODO: Multithreading if i fancy
 /*
 use this to test if supported
 
@@ -41,6 +41,10 @@ export class WorldManager extends Drawable{
     onRender(){
         super.onRender();
 
+        //do physics
+        this.physicsStep();
+
+        //render everything
         ctx = this.ctx;
         for (let y = 0; y < WorldSize.y; y++) {            
             for (let x = 0; x < WorldSize.x; x++) {
@@ -49,14 +53,14 @@ export class WorldManager extends Drawable{
                 if (!part)
                     continue;
 
+                part.step(); 
                 ctx.fillStyle = part.color;
                 ctx.fillRect(x,y,1,1); //draw rectangle :P
             }
         }
-        this.physicsStep();
     }    
 
-    physicsStep(){            
+    physicsStep(){     
         //run particle physics
         for (let y = 0; y < WorldSize.y; y++) {            
             for (let x = 0; x < WorldSize.x; x++) {
@@ -65,13 +69,11 @@ export class WorldManager extends Drawable{
             }
         }
 
-        
         //synchronize world position with matrix position
         this.matrixSync();
     }
 
     matrixSync(){
-        let bufferWorld = world;
         for (let y = 0; y < WorldSize.y; y++) {            
             for (let x = 0; x < WorldSize.x; x++) {
                 let part = world.particles[y][x]
@@ -79,17 +81,23 @@ export class WorldManager extends Drawable{
 
                 if (!part)
                     continue;
-            
-                if (part.position.x == x && part.position.y == y) 
-                    continue;
 
-                bufferWorld.particles[y][x] = undefined;
-                if (Math.round(part.position.y) < WorldSize.y && Math.round(part.position.x) < WorldSize.x) {    
-                    bufferWorld.particles[Math.round(part.position.y)][Math.round(part.position.x)] = part;
+            
+                if (!(part.position.x == x && part.position.y == y)) 
+                {
+                    if ((part.position.y) < WorldSize.y && (part.position.x) < WorldSize.x) {    
+                        if(world.particles[part.position.y][part.position.x]){
+                            part.position = new Vector2(x,y);
+                            part.step();
+                        }
+                        else{
+                            world.particles[y][x] = undefined;
+                            world.particles[(part.position.y)][(part.position.x)] = part;
+                        }
+                    }
                 }
             }
         }
-        world = bufferWorld;
     }
 
     addPart(part: Particle){        
