@@ -1,6 +1,8 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import {Drawable} from "../Canvas-Engine/src/engine/object2D";
 import {Particle} from "./particle";
+import {Renderer} from "./render";
+import {Physics} from "./physics";
 
 export const WorldSize = new Vector2(500,500);
 
@@ -10,17 +12,61 @@ export class World{
     constructor(){
         this.particles = new Array(WorldSize.y);
 
-
         for (let index = 0; index < this.particles.length; index++) {            
             this.particles[index] = new Array(WorldSize.x).fill(undefined);
         }
     }
 
+    //Itterator
+    private getItterVal(i : number){ 
+        let x = Math.floor(i/WorldSize.x);
+        let y = i - Math.floor(i/WorldSize.x)*WorldSize.x;
+
+        let out = this.particles[y][x];
+        return out;
+    }
+    [Symbol.iterator] = () => {
+        let i = 0;
+        return{
+            next:()=>{
+                return{
+                    done: (i >= WorldSize.x * WorldSize.y),
+                    value: this.getItterVal(i++)                        
+                }
+            }
+        }
+    }
+
     particles:Array<Array<Particle | undefined>>;
 
+    
 }
 
 export var world = new World();
+
+export class WorldManager extends Drawable{  
+    onUpdate(){      
+    }
+    
+    onRender(){
+        super.onRender();
+
+        //do physics
+        Physics.step(world);
+
+        //render everything
+        ctx = this.ctx;
+        Renderer.drawFrame(world);
+    }    
+
+
+    addPart(part: Particle){        
+        world.particles[part.position.y][part.position.x] = part;
+    }
+
+}
+
+
 
 //TODO: Multithreading if i fancy
 /*
@@ -33,75 +79,3 @@ if (typeof(Worker) !== "undefined") {
 }
 
 */
-
-export class WorldManager extends Drawable{  
-    onUpdate(){      
-    }
-    
-    onRender(){
-        super.onRender();
-
-        //do physics
-        this.physicsStep();
-
-        //render everything
-        ctx = this.ctx;
-        for (let y = 0; y < WorldSize.y; y++) {            
-            for (let x = 0; x < WorldSize.x; x++) {
-                let part = world.particles[y][x]
-
-                if (!part)
-                    continue;
-
-                part.step(); 
-                ctx.fillStyle = part.color;
-                ctx.fillRect(x,y,1,1); //draw rectangle :P
-            }
-        }
-    }    
-
-    physicsStep(){     
-        //run particle physics
-        for (let y = 0; y < WorldSize.y; y++) {            
-            for (let x = 0; x < WorldSize.x; x++) {
-                let part = world.particles[y][x]
-                part?.step(); 
-            }
-        }
-
-        //synchronize world position with matrix position
-        this.matrixSync();
-    }
-
-    matrixSync(){
-        for (let y = 0; y < WorldSize.y; y++) {            
-            for (let x = 0; x < WorldSize.x; x++) {
-                let part = world.particles[y][x]
-                
-
-                if (!part)
-                    continue;
-
-            
-                if (!(part.position.x == x && part.position.y == y)) 
-                {
-                    if ((part.position.y) < WorldSize.y && (part.position.x) < WorldSize.x) {    
-                        if(world.particles[part.position.y][part.position.x]){
-                            part.position = new Vector2(x,y);
-                            part.step();
-                        }
-                        else{
-                            world.particles[y][x] = undefined;
-                            world.particles[(part.position.y)][(part.position.x)] = part;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    addPart(part: Particle){        
-        world.particles[part.position.y][part.position.x] = part;
-    }
-
-}

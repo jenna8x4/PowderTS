@@ -1,41 +1,18 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import { world,WorldSize } from "./world_manager";
 
-export interface Particle{
-    step() :void; //Physics step
+export class Particle{
+    constructor(position:Vector2){
+        this.weight = 1;
+        this.position = position;
+        this.velocity = new Vector2(0,0);
+        this.color = "white";
+    }
     
-    weight: number;
-    position: Vector2; 
-    velocity: Vector2;    
-    color: string;
-}
+    step() {
+        //
+    };
 
-
-export class Solid implements Particle{
-    constructor(position:Vector2){
-        this.weight = 1;
-        this.position = position;
-        this.velocity = new Vector2(0,0);
-        this.color = "gray";
-    }
-
-    step(){
-        this.velocity = new Vector2(0,0);
-    }
-
-    weight: number;
-    position: Vector2; 
-    velocity: Vector2;  
-    color:string;
-}
-
-export class Powder implements Particle{
-    constructor(position:Vector2){
-        this.weight = 1;
-        this.position = position;
-        this.velocity = new Vector2(0,0);
-        this.color = "yellow";
-    }
     tryMove(relativePos: Vector2) :boolean{
         if (this.position.y+relativePos.y >= WorldSize.y || this.position.x+relativePos.x >= WorldSize.x ||
             this.position.y+relativePos.y < 0 || this.position.x+relativePos.x < 0 ) 
@@ -54,43 +31,52 @@ export class Powder implements Particle{
         }
     }
 
+    weight: number;
+    position: Vector2; 
+    velocity: Vector2;    
+    color: string;
+}
+
+//4 Base particle types Solid Powder Fluid Gas
+
+export class Solid extends Particle{
+    constructor(position:Vector2){
+        super(position);
+        this.color = "gray";
+    }
+
+    step(){
+        this.velocity = new Vector2(0,0);
+    }
+}
+
+export class Powder extends Particle{
+    constructor(position:Vector2){
+        super(position);
+        this.color = "yellow";
+    }
+
     step(){
         if (!this.tryMove(new Vector2(0,1))) { 
             if (Math.random() > 0.5) {
                 
                 if (!this.tryMove(new Vector2(1,1))){
                     if (!this.tryMove(new Vector2(-1,1))){
-                        //this.color = 'yellow';
                         return;
-                    }
-                    else        
-                        //this.color = 'blue';
+                    }      
                 }
-                //else        
-                  //  this.color = 'lime';
 
             }
             else{
 
                 if (!this.tryMove(new Vector2(-1,1))){
                     if (!this.tryMove(new Vector2(1,1))){
-                       // this.color = 'yellow';
                         return;
                     }
-                    //else        
-                     //   this.color = 'lime';
                 }
-                //else        
-                   // this.color = 'blue';
 
             }
         }
-        //else        
-            //this.color = 'aqua';
     }
 
-    weight: number;
-    position: Vector2; 
-    velocity: Vector2;  
-    color:string;
 }

@@ -24,7 +24,7 @@ window.onload = ()=>{
 
     //world_manager.addPart(new Powder(new Vector2(80,0)));  
 
-    for (let x = 180; x < 220; x++) {     
+    for (let x = 180; x < 200; x++) {     
         for (let y = 0; y < 200; y++) {     
             world_manager.addPart(new Powder(new Vector2(x,y)));  
         }
@@ -36,8 +36,8 @@ window.onload = ()=>{
     }
 
     for (let x = 0; x < 100; x++) { 
-        world_manager.addPart(new Solid(new Vector2(-x+291,x+200)));    
-        world_manager.addPart(new Solid(new Vector2(-x+291,x+201)));      
+        world_manager.addPart(new Solid(new Vector2(-x+290,x+200)));    
+        world_manager.addPart(new Solid(new Vector2(-x+290,x+201)));      
     }
 
  
