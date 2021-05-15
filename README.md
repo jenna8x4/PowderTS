@@ -3,7 +3,7 @@ Falling sand game in typescript. For fun :)
 
 
 ## Building the game
-1. Clone the repo
+1. Clone the repo (`git clone --recurse-submodules https://github.com/jenna8x4/PowderTS.git`)
 2. Open a terminal
 3. Go to the `Canvas-Engine` folder
 4. Run npm install
