@@ -4,8 +4,7 @@ import {Particle} from "./particle";
 import {Renderer} from "./render";
 import {Physics} from "./physics";
 
-export const WorldSize = new Vector2(500,500);
-
+export const WorldSize = new Vector2(400,300);
 export var ctx:CanvasRenderingContext2D;
 
 export class World{
@@ -19,8 +18,8 @@ export class World{
 
     //Itterator
     private getItterVal(i : number){ 
-        let x = Math.floor(i/WorldSize.x);
-        let y = i - Math.floor(i/WorldSize.x)*WorldSize.x;
+        let y = Math.floor(i/WorldSize.x);
+        let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
 
         let out = this.particles[y][x];
         return out;
@@ -30,7 +29,7 @@ export class World{
         return{
             next:()=>{
                 return{
-                    done: (i >= WorldSize.x * WorldSize.y),
+                    done: (i >= (WorldSize.x * WorldSize.y - 1)),
                     value: this.getItterVal(i++)                        
                 }
             }
@@ -45,16 +44,22 @@ export class World{
 export var world = new World();
 
 export class WorldManager extends Drawable{  
+    constructor(){
+        super();
+        this.paused = false;
+    }
+
     onUpdate(){      
     }
     
     onRender(){
         super.onRender();
 
-        //do physics
-        Physics.step(world);
+        
+        if(!this.paused)
+            Physics.step(world);
 
-        //render everything
+            
         ctx = this.ctx;
         Renderer.drawFrame(world);
     }    
@@ -64,6 +69,7 @@ export class WorldManager extends Drawable{
         world.particles[part.position.y][part.position.x] = part;
     }
 
+    paused:boolean;
 }
 
 

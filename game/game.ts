@@ -8,6 +8,8 @@ import {world, WorldManager,ctx} from "./world_manager";
 import {KeyboardInput} from "../Canvas-Engine/src/engine/input";
 
 import { Powder, Solid } from "./particle";
+import { config } from "webpack";
+import { Physics } from "./physics";
 
 //create scene
 let level = new Scene();
@@ -19,32 +21,44 @@ window.onload = ()=>{
     CE.setActiveScene(level);
     
     level.members.push(world_manager);
-    world_manager.origin.scale = new Vector2(10,10);
+    world_manager.origin.scale = new Vector2(2,2);
 
 
     //world_manager.addPart(new Powder(new Vector2(80,0)));  
 
-    for (let x = 180; x < 200; x++) {     
-        for (let y = 0; y < 200; y++) {     
+    for (let x = 60; x < 140; x++) {     
+        for (let y = 0; y < 50; y++) {     
             world_manager.addPart(new Powder(new Vector2(x,y)));  
         }
     }
 
     for (let x = 0; x < 100; x++) { 
-        world_manager.addPart(new Solid(new Vector2(x+90,x+200)));    
-        world_manager.addPart(new Solid(new Vector2(x+90,x+201)));      
+        world_manager.addPart(new Solid(new Vector2(x+0,x+60)));    
+        world_manager.addPart(new Solid(new Vector2(x+0,x+61)));      
     }
 
     for (let x = 0; x < 100; x++) { 
-        world_manager.addPart(new Solid(new Vector2(-x+290,x+200)));    
-        world_manager.addPart(new Solid(new Vector2(-x+290,x+201)));      
+        world_manager.addPart(new Solid(new Vector2(-x+200,x+60)));    
+        world_manager.addPart(new Solid(new Vector2(-x+200,x+61)));      
     }
 
+
+    for (let x = 0; x < 50; x++) { 
+        world_manager.addPart(new Solid(new Vector2(-x+100,x+190)));    
+        world_manager.addPart(new Solid(new Vector2(-x+100,x+191)));      
+    }
  
 };
 
 //runs every tick 
 level.onUpdate = ()=>{
+    if (KeyboardInput.isJustPressed("Space")) {
+        world_manager.paused = !world_manager.paused;        
+    }
 
+    if (KeyboardInput.isJustPressed("f")) {
+        world_manager.paused = true;
+        Physics.step(world);
+    }
 	
 }; 

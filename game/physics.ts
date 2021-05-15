@@ -22,7 +22,7 @@ class BasicPhysics implements Physics{
         return sim_state;
     }
 
-    matrixSync(sim_state : World){
+    private matrixSync(sim_state : World){
         for (let y = 0; y < WorldSize.y; y++) {            
             for (let x = 0; x < WorldSize.x; x++) {
                 let part = sim_state.particles[y][x]
