@@ -11,4 +11,4 @@ Falling sand game in typescript. For fun :)
 6. The game should be now in a new folder called `dist`
 
 ## Try it out!
-Access the game from your browser right [here](https://maticzpl.github.io/PowderTS/dist/)
+Access the game from your browser right [here](https://jenna8x4.github.io/PowderTS/dist/)
