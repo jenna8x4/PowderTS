@@ -9,8 +9,8 @@ export class Particle{
         this.color = "white";
     }
     
-    step() {
-        //
+    step() :boolean{
+        return true;
     };
 
     tryMove(relativePos: Vector2) :boolean{
@@ -47,6 +47,7 @@ export class Solid extends Particle{
 
     step(){
         this.velocity = new Vector2(0,0);
+        return true;
     }
 }
 
@@ -62,7 +63,7 @@ export class Powder extends Particle{
                 
                 if (!this.tryMove(new Vector2(1,1))){
                     if (!this.tryMove(new Vector2(-1,1))){
-                        return;
+                        return false;
                     }      
                 }
 
@@ -71,12 +72,14 @@ export class Powder extends Particle{
 
                 if (!this.tryMove(new Vector2(-1,1))){
                     if (!this.tryMove(new Vector2(1,1))){
-                        return;
+                        return false;
                     }
                 }
 
             }
         }
+        
+        return true;
     }
 
 }

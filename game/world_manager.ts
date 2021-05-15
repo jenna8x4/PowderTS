@@ -9,6 +9,8 @@ export var ctx:CanvasRenderingContext2D;
 
 export class World{
     constructor(){
+        this.itteratorDirection = 2;
+
         this.particles = new Array(WorldSize.y);
 
         for (let index = 0; index < this.particles.length; index++) {            
@@ -21,11 +23,30 @@ export class World{
         let y = Math.floor(i/WorldSize.x);
         let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
 
-        let out = this.particles[y][x];
+        let out;
+        
+        switch (this.itteratorDirection) {            
+            case 1:
+                out = this.particles[y][WorldSize.x - x -1];                
+                break;                
+            case 2:
+                out = this.particles[WorldSize.y - y - 1][x];                
+                break;
+            
+            case 3:
+                out = this.particles[WorldSize.y - y -1][WorldSize.x - x -1];                
+                break;
+            
+            default:
+                out = this.particles[y][x];
+                break;
+        }
+
         return out;
     }
-    [Symbol.iterator] = () => {
+    [Symbol.iterator] = () => {      
         let i = 0;
+
         return{
             next:()=>{
                 return{
@@ -38,6 +59,7 @@ export class World{
 
     particles:Array<Array<Particle | undefined>>;
 
+    itteratorDirection :number; //0-3 tl tr bl br
     
 }
 

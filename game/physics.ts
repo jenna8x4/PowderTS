@@ -11,13 +11,34 @@ interface Physics{
 class BasicPhysics implements Physics{
 
     step(sim_state: World){
+        let moved :Array<Particle> = [];
+
+
+        //sim_state.itteratorDirection = Math.floor(Math.random() *3);
+
+        //This line fixes everything
+        sim_state.itteratorDirection++
+        if (sim_state.itteratorDirection > 3) {
+            sim_state.itteratorDirection = 0;
+        }
 
         for(let part of sim_state){
-            part?.step();            
+            if(!part || moved.includes(part))
+                continue;
+            
+                
+            sim_state.particles[part.position.y][part.position.x] = undefined;
+
+            part.step();     
+            moved.push(part);
+
+            sim_state.particles[part.position.y][part.position.x] = part;
+            
         }
 
         //synchronize world position with matrix position
-        this.matrixSync(sim_state);
+        //this.matrixSync(sim_state);
+        
 
         return sim_state;
     }
@@ -32,19 +53,18 @@ class BasicPhysics implements Physics{
                     continue;
 
             
-                if (!(part.position.x == x && part.position.y == y)) 
-                {
-                    if ((part.position.y) < WorldSize.y && (part.position.x) < WorldSize.x) {    
-                        if(sim_state.particles[part.position.y][part.position.x]){
-                            part.position = new Vector2(x,y);
-                            part.step();
-                        }
-                        else{
-                            sim_state.particles[y][x] = undefined;
-                            sim_state.particles[(part.position.y)][(part.position.x)] = part;
-                        }
+                
+                if ((part.position.y) < WorldSize.y && (part.position.x) < WorldSize.x) {    
+                    if(sim_state.particles[part.position.y][part.position.x]){
+                        
+                        part.position = new Vector2(x,y);
+                    }
+                    else{
+                        sim_state.particles[y][x] = undefined;
+                        sim_state.particles[part.position.y][part.position.x] = part;
                     }
                 }
+                
             }
         }
     }

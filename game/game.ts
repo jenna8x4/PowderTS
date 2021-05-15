@@ -27,7 +27,7 @@ window.onload = ()=>{
     //world_manager.addPart(new Powder(new Vector2(80,0)));  
 
     for (let x = 60; x < 140; x++) {     
-        for (let y = 0; y < 50; y++) {     
+        for (let y = 0; y < 15; y++) {     
             world_manager.addPart(new Powder(new Vector2(x,y)));  
         }
     }
