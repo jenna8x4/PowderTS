@@ -5,7 +5,6 @@ import {Renderer} from "./render";
 import {Physics} from "./physics";
 
 export const WorldSize = new Vector2(400,300);
-export var ctx:CanvasRenderingContext2D;
 
 export class World{
     constructor(){
@@ -80,9 +79,7 @@ export class WorldManager extends Drawable{
         
         if(!this.paused)
             Physics.step(world);
-
             
-        ctx = this.ctx;
         Renderer.drawFrame(world);
     }    
 

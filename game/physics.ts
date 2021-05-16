@@ -1,4 +1,4 @@
-import {World,WorldSize,ctx} from "./world_manager";
+import {World,WorldSize} from "./world_manager";
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import {Particle} from "./particle";
 
