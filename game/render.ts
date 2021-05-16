@@ -1,4 +1,5 @@
-import {World,WorldSize,ctx,world} from "./world_manager";
+import {World,WorldSize,world} from "./world_manager";
+import {canvas,ctx} from "../Canvas-Engine/src/engine/renderer"
 
 interface Renderer{
 
