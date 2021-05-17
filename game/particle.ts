@@ -1,4 +1,5 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
+import { Utility } from "./util";
 import { world,WorldSize } from "./world_manager";
 
 export class Particle{
@@ -23,8 +24,7 @@ export class Moveable extends Particle{
     }
 
     tryMove(relativePos: Vector2) :boolean{
-        if (this.position.y+relativePos.y >= WorldSize.y || this.position.x+relativePos.x >= WorldSize.x ||
-            this.position.y+relativePos.y < 0 || this.position.x+relativePos.x < 0 ) 
+        if (!Utility.inBounds(new Vector2(this.position.x+relativePos.x,this.position.y+relativePos.y))) 
             return false;        
 
         let target = world.particles[this.position.y+relativePos.y][this.position.x+relativePos.x];

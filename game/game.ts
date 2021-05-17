@@ -24,9 +24,8 @@ window.onload = ()=>{
     
     level.members.push(world_manager);
     world_manager.origin.scale = new Vector2(2,2);
-    
-    
-    //level.members.push(cursor);
+        
+    level.members.push(cursor);
 
 
 
@@ -36,10 +35,11 @@ window.onload = ()=>{
     for (let x = 60; x < 140; x++) {     
         for (let y = 0; y < 15; y++) {     
             //mix some fluid and powder
-            if(x*y % 3 == 0)
+            if(x*y % 3 == 0){                
                 world_manager.addPart(new Powder(new Vector2(x,y))); 
+            }
             else 
-                world_manager.addPart(new Fluid(new Vector2(x,y))); 
+                world_manager.addPart(new Fluid(new Vector2(x,y+20))); 
         }
     }
 
@@ -57,7 +57,7 @@ window.onload = ()=>{
         world_manager.addPart(new Solid(new Vector2(-x+100,x+190)));    
         world_manager.addPart(new Solid(new Vector2(-x+100,x+191)));      
     }
- 
+
 };
 
 //runs every tick 
@@ -71,6 +71,6 @@ level.onUpdate = ()=>{
     if (KeyboardInput.isJustPressed("f")) {
         world_manager.paused = true;
         Physics.step(world);
-    }   
-	
+    }  
+
 }; 
