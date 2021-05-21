@@ -1,6 +1,6 @@
 import {World,WorldSize} from "./world_manager";
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
-import {Particle} from "./particle";
+import {Moveable, Particle} from "./particle";
 
 interface Physics{
 
@@ -22,7 +22,7 @@ class BasicPhysics implements Physics{
         }
 
         for(let part of sim_state){
-            if(!part || moved.includes(part))
+            if(!part || !(part instanceof Moveable) || moved.includes(part))
                 continue;
             
                 

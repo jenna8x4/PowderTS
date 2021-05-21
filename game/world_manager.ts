@@ -1,5 +1,6 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import {Drawable} from "../Canvas-Engine/src/engine/object2D";
+import {ctx} from "../Canvas-Engine/src/engine/renderer";
 import {Particle} from "./particle";
 import {Renderer} from "./render";
 import {Physics} from "./physics";
@@ -18,30 +19,25 @@ export class World{
     }
 
     //Itterator
-    private getItterVal(i : number){ 
+    private getItterVal(i : number):Particle | undefined{ 
         let y = Math.floor(i/WorldSize.x);
         let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
 
-        let out;
         
         switch (this.itteratorDirection) {            
             case 1:
-                out = this.particles[y][WorldSize.x - x -1];                
-                break;                
+                return this.particles[y][WorldSize.x - x -1];                
+                                
             case 2:
-                out = this.particles[WorldSize.y - y - 1][x];                
-                break;
+                return this.particles[WorldSize.y - y - 1][x];     
             
             case 3:
-                out = this.particles[WorldSize.y - y -1][WorldSize.x - x -1];                
-                break;
+                return this.particles[WorldSize.y - y -1][WorldSize.x - x -1];     
             
             default:
-                out = this.particles[y][x];
-                break;
+                return this.particles[y][x];
         }
 
-        return out;
     }
     [Symbol.iterator] = () => {      
         let i = 0;
@@ -81,6 +77,9 @@ export class WorldManager extends Drawable{
             Physics.step(world);
             
         Renderer.drawFrame(world);
+
+        ctx.strokeStyle = '#777';
+        ctx.strokeRect(0,0,400,300);
     }    
 
 

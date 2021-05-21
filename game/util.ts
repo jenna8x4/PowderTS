@@ -11,17 +11,27 @@ export class Utility{
         return true;
     }
 
-    static vectorInterpolate(eachStep: Function, from:Vector2, to:Vector2){
-        let direction = new Vector2(
-            to.x - from.x,
-            to.y - from.y
-        );
+    static vectorInterpolate(from:Vector2, to:Vector2, progress:number){
+        
+        
 
-        let step = direction.normalized();
-        let current = from;
+    }
 
-        //while(current)
+    static rgbToHex(color :{r:number,g:number,b:number}):string {
+        let r = color.r;
+        let g = color.g;
+        let b = color.b;
 
+        let rhex = r.toString(16);
+        rhex = ( rhex.length == 1 ? "0" + rhex : rhex);
+
+        let ghex = g.toString(16);
+        ghex = ( ghex.length == 1 ? "0" + ghex : ghex);
+
+        let bhex = b.toString(16);
+        bhex = ( bhex.length == 1 ? "0" + bhex : bhex);
+
+        return `#${rhex}${ghex}${bhex}`;
     }
 
 }

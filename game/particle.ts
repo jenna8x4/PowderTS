@@ -2,17 +2,18 @@ import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import { Utility } from "./util";
 import { world,WorldSize } from "./world_manager";
 
+
 export class Particle{
     constructor(position:Vector2){
         this.position = position;
-        this.color = "white";
+        this.color = {r:255,g:255,b:255};
     }
     
     step(){
     };
    
     position: Vector2; 
-    color: string;
+    color: {r:number,g:number,b:number};
 }
 
 export class Moveable extends Particle{    
@@ -74,7 +75,7 @@ export class Moveable extends Particle{
 export class Solid extends Particle{
     constructor(position:Vector2){
         super(position);
-        this.color = "gray";
+        this.color = {r:120,g:120,b:120};
     }
 
     step(){
@@ -84,7 +85,7 @@ export class Solid extends Particle{
 export class Powder extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "yellow";
+        this.color = {r:255,g:255,b:0};;
         this.weight = 2;
     }
 
@@ -118,7 +119,7 @@ export class Powder extends Moveable{
 export class Fluid extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "aqua";
+        this.color = {r:10,g:170,b:255};
     }
 
     step(){

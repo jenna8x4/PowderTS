@@ -24,15 +24,24 @@ export class Cursor extends Shape{
         this.tools = new Map<MouseButton,Tool>();
 
         this.tools.set("LMB",new Tool(pos=>{
+            if(!Utility.inBounds(pos))
+                return;
+                
             if (!world.particles[pos.y][pos.x])
                 world.particles[pos.y][pos.x] = new Powder(pos);
         }));
 
         this.tools.set("RMB",new Tool(pos=>{
+            if(!Utility.inBounds(pos))
+                return;
+
             delete world.particles[pos.y][pos.x];
         }));
 
         this.tools.set("ScrollButton",new Tool(pos=>{
+            if(!Utility.inBounds(pos))
+                return;
+
             if (!world.particles[pos.y][pos.x])
                 world.particles[pos.y][pos.x] = new Solid(pos);
         }));

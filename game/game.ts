@@ -28,7 +28,6 @@ window.onload = ()=>{
     level.members.push(cursor);
 
 
-
     //world_manager.addPart(new Powder(new Vector2(80,0)));  
 
     //Demo world
