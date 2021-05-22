@@ -12,9 +12,19 @@ export class Utility{
     }
 
     static vectorInterpolate(from:Vector2, to:Vector2, progress:number){
+        let out = new Vector2
+        (
+            to.x - from.x,
+            to.y - from.y
+        );
         
+        out.x *= progress;
+        out.y *= progress;
         
+        out.x += from.x;
+        out.y += from.y;
 
+        return out;     
     }
 
     static rgbToHex(color :{r:number,g:number,b:number}):string {

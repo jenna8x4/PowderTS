@@ -27,6 +27,8 @@ export class Cursor extends Shape{
             ["ScrollButton",Tool.Tools.get("PICK")]
         ]);
 
+        this.wasPressed = false;
+        this.lastPos = new Vector2(0,0);
     }
 
     changeRadius(radius : number){
@@ -49,20 +51,44 @@ export class Cursor extends Shape{
 
         this.changeRadius(this.radius);
 
+        let placed = false;
+
         this.tools.forEach((tool,button)=>{
             if (MouseInput.isPressed(button)) {
                 if(!tool)
                     return;
-
-                tool.draw(this);
+                    
+                    this.draw(tool);
+                
                 return;
             }
         });
     }
 
+    draw(tool :Tool){
+        let myPos = new Vector2(this.origin.position.x,this.origin.position.y);
+
+
+        let distance = new Vector2(
+            myPos.x - this.lastPos.x,
+            myPos.y - this.lastPos.y
+        )
+        let step = 1 / distance.lenght();
+
+        for (let index = 0; index < 1; index+=step) {
+            let target = Utility.vectorInterpolate(this.lastPos,myPos,index);
+
+
+            tool.draw(target,this.radius);
+        }       
+
+    }
+
     onRender(){               
         if(MouseInput.currentPosition)
-        {
+        {            
+            this.lastPos = new Vector2( this.origin.position.x,this.origin.position.y);
+           
             this.origin.position.x = Math.round( MouseInput.currentPosition.x /2) *2;
             this.origin.position.y = Math.round(MouseInput.currentPosition.y /2) * 2;
 
@@ -78,4 +104,6 @@ export class Cursor extends Shape{
     radius:number;
     tools:Map<MouseButton,Tool | undefined>;
 
+    wasPressed:boolean;
+    lastPos:Vector2;
 }

@@ -12,8 +12,8 @@ export class Tool{
         this.color = color;
     }
 
-    draw(cursor:Cursor){
-        let pos = cursor.origin.position;
+    draw(position:Vector2,radius:number){
+        let pos = position;
 
         pos.x = Math.floor(pos.x / 2);
         pos.y = Math.floor(pos.y / 2);
@@ -25,8 +25,8 @@ export class Tool{
             return;
 
 
-        for (let y = pos.y; y < (pos.y + (cursor.radius)); y++) {  
-            for (let x = pos.x; x < (pos.x + (cursor.radius)); x++) {
+        for (let y = pos.y; y < (pos.y + (radius)); y++) {  
+            for (let x = pos.x; x < (pos.x + (radius)); x++) {
 
                 if(!Utility.inBounds(new Vector2(x,y)))
                     continue;
