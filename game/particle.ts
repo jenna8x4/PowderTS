@@ -7,6 +7,7 @@ export class Particle{
     constructor(position:Vector2){
         this.position = position;
         this.color = {r:255,g:255,b:255};
+
     }
     
     step(){
@@ -14,6 +15,7 @@ export class Particle{
    
     position: Vector2; 
     color: {r:number,g:number,b:number};
+    partName = "NONE";
 }
 
 export class Moveable extends Particle{    
@@ -80,6 +82,8 @@ export class Solid extends Particle{
 
     step(){
     }
+
+    partName = "WALL";
 }
 
 export class Powder extends Moveable{
@@ -114,6 +118,8 @@ export class Powder extends Moveable{
         return true;
     }
 
+
+    partName = "SAND";
 }
 
 export class Fluid extends Moveable{
@@ -171,4 +177,6 @@ export class Fluid extends Moveable{
         }
     }
 
+
+    partName = "WATR";
 }

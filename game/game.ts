@@ -10,11 +10,15 @@ import {KeyboardInput, MouseInput} from "../Canvas-Engine/src/engine/input";
 import { Fluid, Powder, Solid } from "./particle";
 import { Cursor } from "./cursor";
 import { Physics } from "./physics";
+import { ToolBar } from "./ToolBar";
+import { Tool } from "./cursorTool";
+import { Utility } from "./util";
 
 //create scene
 let level = new Scene();
 let world_manager = new WorldManager();
-let cursor = new Cursor();
+export let cursor = new Cursor();
+export let toolbar = new ToolBar();
 
 window.onload = ()=>{
     //init engine
@@ -26,6 +30,11 @@ window.onload = ()=>{
     world_manager.origin.scale = new Vector2(2,2);
         
     level.members.push(cursor);
+    level.members.push(toolbar);
+    toolbar.updateOutline();
+
+
+  
 
 
     //world_manager.addPart(new Powder(new Vector2(80,0)));  

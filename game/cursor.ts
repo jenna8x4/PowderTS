@@ -21,32 +21,11 @@ export class Cursor extends Shape{
         this.origin_in_center = true;
         this.radius = 1;
 
-        this.tools = new Map<MouseButton,Tool>();
-
-        this.tools.set("LMB",new Tool(pos=>{
-            if(!Utility.inBounds(pos))
-                return;
-                
-            if (!world.particles[pos.y][pos.x])
-                world.particles[pos.y][pos.x] = new Powder(pos);
-        }));
-
-        this.tools.set("RMB",new Tool(pos=>{
-            if(!Utility.inBounds(pos))
-                return;
-
-            delete world.particles[pos.y][pos.x];
-        }));
-
-        this.tools.set("ScrollButton",new Tool(pos=>{
-            if(!Utility.inBounds(pos))
-                return;
-
-            if (!world.particles[pos.y][pos.x])
-                world.particles[pos.y][pos.x] = new Solid(pos);
-        }));
-
-
+        this.tools = new Map<MouseButton,Tool | undefined>([
+            ["LMB",         Tool.Tools.get("SAND")],
+            ["RMB",         Tool.Tools.get("ERAS")],
+            ["ScrollButton",Tool.Tools.get("PICK")]
+        ]);
 
     }
 
@@ -72,6 +51,9 @@ export class Cursor extends Shape{
 
         this.tools.forEach((tool,button)=>{
             if (MouseInput.isPressed(button)) {
+                if(!tool)
+                    return;
+
                 tool.draw(this);
                 return;
             }
@@ -94,6 +76,6 @@ export class Cursor extends Shape{
     }
 
     radius:number;
-    tools:Map<MouseButton,Tool>;
+    tools:Map<MouseButton,Tool | undefined>;
 
 }
