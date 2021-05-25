@@ -1,17 +1,21 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
+import { Utility } from "./util";
 import { world,WorldSize } from "./world_manager";
+
 
 export class Particle{
     constructor(position:Vector2){
         this.position = position;
-        this.color = "white";
+        this.color = {r:255,g:255,b:255};
+
     }
     
     step(){
     };
    
     position: Vector2; 
-    color: string;
+    color: {r:number,g:number,b:number};
+    partName = "NONE";
 }
 
 export class Moveable extends Particle{    
@@ -23,8 +27,7 @@ export class Moveable extends Particle{
     }
 
     tryMove(relativePos: Vector2) :boolean{
-        if (this.position.y+relativePos.y >= WorldSize.y || this.position.x+relativePos.x >= WorldSize.x ||
-            this.position.y+relativePos.y < 0 || this.position.x+relativePos.x < 0 ) 
+        if (!Utility.inBounds(new Vector2(this.position.x+relativePos.x,this.position.y+relativePos.y))) 
             return false;        
 
         let target = world.particles[this.position.y+relativePos.y][this.position.x+relativePos.x];
@@ -74,17 +77,19 @@ export class Moveable extends Particle{
 export class Solid extends Particle{
     constructor(position:Vector2){
         super(position);
-        this.color = "gray";
+        this.color = {r:120,g:120,b:120};
     }
 
     step(){
     }
+
+    partName = "WALL";
 }
 
 export class Powder extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "yellow";
+        this.color = {r:255,g:255,b:0};;
         this.weight = 2;
     }
 
@@ -113,12 +118,14 @@ export class Powder extends Moveable{
         return true;
     }
 
+
+    partName = "SAND";
 }
 
 export class Fluid extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "aqua";
+        this.color = {r:10,g:170,b:255};
     }
 
     step(){
@@ -170,4 +177,6 @@ export class Fluid extends Moveable{
         }
     }
 
+
+    partName = "WATR";
 }
