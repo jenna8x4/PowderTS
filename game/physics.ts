@@ -11,30 +11,67 @@ interface Physics{
 class BasicPhysics implements Physics{
 
     step(sim_state: World){
-        let moved :Array<Particle> = [];
-
-
-        //sim_state.itteratorDirection = Math.floor(Math.random() *3);
-
-        //This line fixes everything
-        sim_state.itteratorDirection++
-        if (sim_state.itteratorDirection > 3) {
-            sim_state.itteratorDirection = 0;
-        }
 
         for(let part of sim_state){
-            if(!part || moved.includes(part))
+            if(!part)
                 continue;
-            
-                
-            sim_state.particles[part.position.y][part.position.x] = undefined;
 
-            part.step();     
-            moved.push(part);
-
-            sim_state.particles[part.position.y][part.position.x] = part;
-            
+            part.decide();
         }
+
+        let parts :Array<Particle> = new Array();
+        for(let part of sim_state){
+            if(!part)
+                continue;
+
+            sim_state.particles[part.position.y][part.position.x] = undefined;
+            part.step();            
+            parts.push(part);
+        }
+
+
+        let conflicts :Map<Particle, Set<Particle>> = new Map();
+        for(let part of parts){
+
+            const first = sim_state.particles[part.position.y][part.position.x]
+            if(first == undefined){
+                sim_state.particles[part.position.y][part.position.x] = part;
+            } else {
+                let conflict = conflicts.get(first);
+                if(!conflict){
+                    conflict = new Set([first])
+                    conflicts.set(first, conflict);
+                }
+                conflict.add(part);
+            }
+        }
+
+        console.log(conflicts.size + ' conflicts');
+        for(let [first, conflict] of conflicts.entries()){
+            conflicts.delete(first);
+            sim_state.particles[first.position.y][first.position.x] = undefined;
+            for(let part of conflict){
+                part.position.x -= part.velocity.x;
+                part.position.y -= part.velocity.y;
+                part.velocity.x = 0;
+                part.velocity.y = 0;
+
+                const first = sim_state.particles[part.position.y][part.position.x];
+                if(first == undefined){
+                    sim_state.particles[part.position.y][part.position.x] = part;
+                } else {
+                    let conflict = conflicts.get(first);
+                    if(!conflict){
+                        conflict = new Set([first])
+                        conflicts.set(first, conflict);
+                    }
+                    conflict.add(part);
+                }
+            }
+            console.log(conflicts.size + ' conflicts');
+        }
+
+
 
         //synchronize world position with matrix position
         //this.matrixSync(sim_state);

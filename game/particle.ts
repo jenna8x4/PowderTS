@@ -4,13 +4,22 @@ import { world,WorldSize } from "./world_manager";
 export class Particle{
     constructor(position:Vector2){
         this.position = position;
+        this.velocity = new Vector2(0,0);
         this.color = "white";
     }
     
+    decide(){
+    }
+    
     step(){
-    };
+        if(this.velocity != undefined){
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+        }
+    }
    
     position: Vector2; 
+    velocity: Vector2;
     color: string;
 }
 
@@ -34,8 +43,8 @@ export class Moveable extends Particle{
         }
         else
         {
-            this.position.x += relativePos.x; 
-            this.position.y += relativePos.y; 
+            this.velocity.x = relativePos.x; 
+            this.velocity.y = relativePos.y; 
             return true;
         }
     }
@@ -46,18 +55,10 @@ export class Moveable extends Particle{
         if(target instanceof Moveable && target.weight < this.weight)
         {                
             //Swap!            
-            world.particles[this.position.y][this.position.x] = undefined;
-            world.particles[target.position.y][target.position.x] = undefined;
-
-            let newPos = new Vector2(target.position.x,target.position.y);
-
-            target.position.x = this.position.x;
-            target.position.y = this.position.y;
-
-            this.position = newPos;
-            
-            world.particles[this.position.y][this.position.x] = this;
-            world.particles[target.position.y][target.position.x] = target;
+            target.velocity.x = this.position.x - target.position.x;
+            target.velocity.y = this.position.y - target.position.y;
+            this.velocity.x = target.velocity.x;
+            this.velocity.y = target.velocity.y;
             
             return true;
         }
@@ -76,9 +77,6 @@ export class Solid extends Particle{
         super(position);
         this.color = "gray";
     }
-
-    step(){
-    }
 }
 
 export class Powder extends Moveable{
@@ -88,7 +86,7 @@ export class Powder extends Moveable{
         this.weight = 2;
     }
 
-    step(){
+    decide(){
         if (!this.tryMove(new Vector2(0,1))) { 
             if (Math.random() > 0.5) {
                 
@@ -120,8 +118,8 @@ export class Fluid extends Moveable{
         super(position);
         this.color = "aqua";
     }
-
-    step(){
+    
+    decide(){
         if (!this.tryMove(new Vector2(0,1))) { 
             if (Math.random() > 0.5) {
                 

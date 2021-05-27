@@ -8,8 +8,6 @@ export const WorldSize = new Vector2(400,300);
 
 export class World{
     constructor(){
-        this.itteratorDirection = 2;
-
         this.particles = new Array(WorldSize.y);
 
         for (let index = 0; index < this.particles.length; index++) {            
@@ -17,48 +15,28 @@ export class World{
         }
     }
 
-    //Itterator
-    private getItterVal(i : number){ 
-        let y = Math.floor(i/WorldSize.x);
-        let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
-
-        let out;
-        
-        switch (this.itteratorDirection) {            
-            case 1:
-                out = this.particles[y][WorldSize.x - x -1];                
-                break;                
-            case 2:
-                out = this.particles[WorldSize.y - y - 1][x];                
-                break;
-            
-            case 3:
-                out = this.particles[WorldSize.y - y -1][WorldSize.x - x -1];                
-                break;
-            
-            default:
-                out = this.particles[y][x];
-                break;
-        }
-
-        return out;
-    }
     [Symbol.iterator] = () => {      
         let i = 0;
 
         return{
             next:()=>{
-                return{
-                    done: (i >= (WorldSize.x * WorldSize.y - 1)),
-                    value: this.getItterVal(i++)                        
+                let done = (i >= (WorldSize.x * WorldSize.y));
+                if(done){
+                    return {done: true};
+                } else {
+                    let y = Math.floor(i/WorldSize.x);
+                    let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
+                    i += 1;
+                    return{
+                        done: false,
+                        value: this.particles[y][x]
+                    }
                 }
             }
         }
     }
 
     particles:Array<Array<Particle | undefined>>;
-
-    itteratorDirection :number; //0-3 tl tr bl br
     
 }
 
@@ -68,6 +46,7 @@ export class WorldManager extends Drawable{
     constructor(){
         super();
         this.paused = false;
+        this.frame = 0;
     }
 
     onUpdate(){      
@@ -81,6 +60,7 @@ export class WorldManager extends Drawable{
             Physics.step(world);
             
         Renderer.drawFrame(world);
+        document.title = ''+(++this.frame);
     }    
 
 
@@ -89,6 +69,7 @@ export class WorldManager extends Drawable{
     }
 
     paused:boolean;
+    frame:number;
 }
 
 
