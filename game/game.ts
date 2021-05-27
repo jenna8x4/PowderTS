@@ -34,15 +34,13 @@ window.onload = ()=>{
 
     //Demo world
     for (let x = 60; x < 140; x++) {     
-        for (let y = 0; y < 8; y++) {     
+        for (let y = 0; y < 15; y++) {     
             //mix some fluid and powder
-            world_manager.addPart(new Powder(new Vector2(x,y))); 
-        }
-    }
-    for (let x = 60; x < 140; x++) {     
-        for (let y = 15; y < 22; y++) {     
-            //mix some fluid and powder
-            world_manager.addPart(new Fluid(new Vector2(x,y))); 
+            if(x*y % 3 == 0){                
+                world_manager.addPart(new Powder(new Vector2(x,y))); 
+            }
+            else 
+                world_manager.addPart(new Fluid(new Vector2(x,y+20))); 
         }
     }
 
@@ -52,18 +50,13 @@ window.onload = ()=>{
     }
 
     for (let x = 0; x < 100; x++) { 
-        world_manager.addPart(new Solid(new Vector2(-x+220,x+60)));    
-        world_manager.addPart(new Solid(new Vector2(-x+220,x+61)));      
+        world_manager.addPart(new Solid(new Vector2(-x+200,x+60)));    
+        world_manager.addPart(new Solid(new Vector2(-x+200,x+61)));      
     }
 
     for (let x = 0; x < 50; x++) { 
-        world_manager.addPart(new Solid(new Vector2(-x+98,x+190)));    
-        world_manager.addPart(new Solid(new Vector2(-x+98,x+191)));      
-    }
-
-    for (let x = 0; x < 10; x++) { 
-        world_manager.addPart(new Solid(new Vector2(x+98,190)));    
-        world_manager.addPart(new Solid(new Vector2(x+98,191)));      
+        world_manager.addPart(new Solid(new Vector2(-x+100,x+190)));    
+        world_manager.addPart(new Solid(new Vector2(-x+100,x+191)));      
     }
  
 };

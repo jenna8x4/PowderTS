@@ -92,7 +92,11 @@ export class Solid extends Particle{
 export class Powder extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "yellow";
+        if (Math.random() < 0.6) {
+            this.color = "yellow";
+        } else {
+            this.color = "khaki";
+        }
         this.weight = 2;
     }
 
@@ -122,7 +126,11 @@ export class Powder extends Moveable{
 export class Fluid extends Moveable{
     constructor(position:Vector2){
         super(position);
-        this.color = "aqua";
+        if (Math.random() < 0.6) {
+            this.color = "aqua";
+        } else {
+            this.color = "lightseagreen";
+        }
     }
     
     decide(){
