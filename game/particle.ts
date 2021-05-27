@@ -13,8 +13,18 @@ export class Particle{
     
     step(){
         if(this.velocity != undefined){
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
+            const newX = this.position.x + this.velocity.x;
+            if(0 <= newX && newX < WorldSize.x){
+                this.position.x = newX;
+            }else{
+                this.velocity.x = 0;
+            }
+            const newY = this.position.y + this.velocity.y;
+            if(0 <= newY && newY < WorldSize.y){
+                this.position.y = newY;
+            }else{
+                this.velocity.y = 0;
+            }
         }
     }
    
@@ -55,10 +65,10 @@ export class Moveable extends Particle{
         if(target instanceof Moveable && target.weight < this.weight)
         {                
             //Swap!            
-            target.velocity.x = this.position.x - target.position.x;
-            target.velocity.y = this.position.y - target.position.y;
-            this.velocity.x = target.velocity.x;
-            this.velocity.y = target.velocity.y;
+            this.velocity.x = target.position.x - this.position.x;
+            this.velocity.y = target.position.y - this.position.y;
+            //target.velocity.x = -this.velocity.x;
+            //target.velocity.y = -this.velocity.y;
             
             return true;
         }
@@ -91,18 +101,14 @@ export class Powder extends Moveable{
             if (Math.random() > 0.5) {
                 
                 if (!this.tryMove(new Vector2(1,1))){
-                    if (!this.tryMove(new Vector2(-1,1))){
-                        return false;
-                    }      
+                    return false;
                 }
 
             }
             else{
 
                 if (!this.tryMove(new Vector2(-1,1))){
-                    if (!this.tryMove(new Vector2(1,1))){
-                        return false;
-                    }
+                    return false;
                 }
 
             }
@@ -124,20 +130,16 @@ export class Fluid extends Moveable{
             if (Math.random() > 0.5) {
                 
                 if (!this.tryMove(new Vector2(1,1))){
-                    if (!this.tryMove(new Vector2(-1,1))){
-                        this.moveSide();
-                        return true;
-                    }      
+                    this.moveSide();
+                    return true;
                 }
 
             }
             else{
 
                 if (!this.tryMove(new Vector2(-1,1))){
-                    if (!this.tryMove(new Vector2(1,1))){
-                        this.moveSide();
-                        return true;
-                    }
+                    this.moveSide();
+                    return true;
                 }
 
             }
@@ -151,18 +153,14 @@ export class Fluid extends Moveable{
         if (Math.random() > 0.5) {
                 
             if (!this.tryMove(new Vector2(1,0))){
-                if (!this.tryMove(new Vector2(-1,0))){
-                    return false;
-                }      
+                return false;
             }
 
         }
         else{
 
             if (!this.tryMove(new Vector2(-1,0))){
-                if (!this.tryMove(new Vector2(1,0))){
-                    return false;
-                }
+                return false;
             }
 
         }
