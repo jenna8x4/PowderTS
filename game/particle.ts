@@ -8,24 +8,7 @@ export class Particle{
         this.color = "white";
     }
     
-    decide(){
-    }
-    
     step(){
-        if(this.velocity != undefined){
-            const newX = this.position.x + this.velocity.x;
-            if(0 <= newX && newX < WorldSize.x){
-                this.position.x = newX;
-            }else{
-                this.velocity.x = 0;
-            }
-            const newY = this.position.y + this.velocity.y;
-            if(0 <= newY && newY < WorldSize.y){
-                this.position.y = newY;
-            }else{
-                this.velocity.y = 0;
-            }
-        }
     }
    
     position: Vector2; 
@@ -41,38 +24,45 @@ export class Moveable extends Particle{
         this.velocity = new Vector2(0,0);
     }
 
-    tryMove(relativePos: Vector2) :boolean{
-        if (this.position.y+relativePos.y >= WorldSize.y || this.position.x+relativePos.x >= WorldSize.x ||
-            this.position.y+relativePos.y < 0 || this.position.x+relativePos.x < 0 ) 
-            return false;        
+    tryMove(x: number, y: number) :boolean{
+        if (this.position.y+y >= WorldSize.y || this.position.x+x >= WorldSize.x ||
+            this.position.y+y < 0 || this.position.x+x < 0 ) 
+            return false;
 
-        let target = world.particles[this.position.y+relativePos.y][this.position.x+relativePos.x];
+        let target = world.particles[this.position.y+y][this.position.x+x];
 
-        if (target != undefined) { 
-            return this.trySwap(relativePos);;
-        }
-        else
-        {
-            this.velocity.x = relativePos.x; 
-            this.velocity.y = relativePos.y; 
+        if (target == undefined) {
+            world.particles[this.position.y][this.position.x] = undefined;
+            this.velocity.x = x; 
+            this.velocity.y = y; 
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+            world.particles[this.position.y][this.position.x] = this;
             return true;
         }
-    }
+        else if(target instanceof Moveable) {
+            if (target.velocity.x || target.velocity.y)
+                return false;
 
-    trySwap(relativePos: Vector2) :boolean{        
-        let target = world.particles[this.position.y+relativePos.y][this.position.x+relativePos.x];
-
-        if(target instanceof Moveable && target.weight < this.weight)
-        {                
-            //Swap!            
-            this.velocity.x = target.position.x - this.position.x;
-            this.velocity.y = target.position.y - this.position.y;
-            //target.velocity.x = -this.velocity.x;
-            //target.velocity.y = -this.velocity.y;
+            if (target.weight >= this.weight)
+                return false;
+            
+            //Swap!
+            this.velocity.x = x;
+            this.velocity.y = y;
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+            target.velocity.x = -x;
+            target.velocity.y = -y;
+            target.position.x += target.velocity.x;
+            target.position.y += target.velocity.y;
+            world.particles[this.position.y][this.position.x] = this;
+            world.particles[target.position.y][target.position.x] = target;
             
             return true;
         }
-        return false;
+        else
+            return false;
     }
 
     velocity: Vector2;    
@@ -100,21 +90,17 @@ export class Powder extends Moveable{
         this.weight = 2;
     }
 
-    decide(){
-        if (!this.tryMove(new Vector2(0,1))) { 
+    step(){
+        if (!this.tryMove(0,1)) { 
             if (Math.random() > 0.5) {
-                
-                if (!this.tryMove(new Vector2(1,1))){
+                if (!this.tryMove(1,1)){
                     return false;
                 }
-
             }
             else{
-
-                if (!this.tryMove(new Vector2(-1,1))){
+                if (!this.tryMove(-1,1)){
                     return false;
                 }
-
             }
         }
         
@@ -133,45 +119,19 @@ export class Fluid extends Moveable{
         }
     }
     
-    decide(){
-        if (!this.tryMove(new Vector2(0,1))) { 
+    step(){
+        if (!this.tryMove(0,1)) { 
             if (Math.random() > 0.5) {
-                
-                if (!this.tryMove(new Vector2(1,1))){
-                    this.moveSide();
-                    return true;
-                }
-
+                if (!this.tryMove(1,1) && !this.tryMove(1,0))
+                    return false;
             }
             else{
-
-                if (!this.tryMove(new Vector2(-1,1))){
-                    this.moveSide();
-                    return true;
-                }
-
+                if (!this.tryMove(-1,1) && !this.tryMove(-1,0))
+                    return false;
             }
         }
-
 
         return true;
-    }
-
-    moveSide(){
-        if (Math.random() > 0.5) {
-                
-            if (!this.tryMove(new Vector2(1,0))){
-                return false;
-            }
-
-        }
-        else{
-
-            if (!this.tryMove(new Vector2(-1,0))){
-                return false;
-            }
-
-        }
     }
 
 }

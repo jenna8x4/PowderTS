@@ -16,17 +16,17 @@ export class World{
     }
 
     [Symbol.iterator] = () => {      
-        let i = 0;
+        let i = WorldSize.x * WorldSize.y - 1;
 
         return{
             next:()=>{
-                let done = (i >= (WorldSize.x * WorldSize.y));
+                let done = (i < 0);
                 if(done){
                     return {done: true};
                 } else {
                     let y = Math.floor(i/WorldSize.x);
-                    let x = i - Math.floor(i/WorldSize.x)*WorldSize.x;
-                    i += 1;
+                    let x = i % WorldSize.x;
+                    i -= 1;
                     return{
                         done: false,
                         value: this.particles[y][x]

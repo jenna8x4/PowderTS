@@ -36,10 +36,10 @@ window.onload = ()=>{
     for (let x = 60; x < 140; x++) {     
         for (let y = 0; y < 15; y++) {     
             //mix some fluid and powder
-            if(x*y % 3 == 0){                
+            //if(x*y % 3 == 0){                
                 world_manager.addPart(new Powder(new Vector2(x,y))); 
-            }
-            else 
+            //}
+            //else 
                 world_manager.addPart(new Fluid(new Vector2(x,y+20))); 
         }
     }
