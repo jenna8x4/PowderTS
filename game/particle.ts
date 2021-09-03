@@ -24,6 +24,10 @@ export class Moveable extends Particle{
         this.velocity = new Vector2(0,0);
     }
 
+    canSwapWith(other:Moveable){
+        return other.weight < this.weight;
+    }
+
     tryMove(x: number, y: number) :boolean{
         if (this.position.y+y >= WorldSize.y || this.position.x+x >= WorldSize.x ||
             this.position.y+y < 0 || this.position.x+x < 0 ) 
@@ -44,7 +48,7 @@ export class Moveable extends Particle{
             if (target.velocity.x || target.velocity.y)
                 return false;
 
-            if (target.weight >= this.weight)
+            if (!this.canSwapWith(target))
                 return false;
             
             //Swap!
@@ -117,6 +121,11 @@ export class Fluid extends Moveable{
         } else {
             this.color = "lightseagreen";
         }
+    }
+
+    canSwapWith(other:Moveable) {
+        return other.weight < this.weight ||
+            other.weight == this.weight && other instanceof Fluid && Math.random() <= 0.001;
     }
     
     step(){
