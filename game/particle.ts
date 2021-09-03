@@ -24,7 +24,7 @@ export class Moveable extends Particle{
         this.velocity = new Vector2(0,0);
     }
 
-    canSwapWith(other:Moveable){
+    shouldSwapWith(other:Moveable){
         return other.weight < this.weight;
     }
 
@@ -48,7 +48,7 @@ export class Moveable extends Particle{
             if (target.velocity.x || target.velocity.y)
                 return false;
 
-            if (!this.canSwapWith(target))
+            if (!this.shouldSwapWith(target))
                 return false;
             
             //Swap!
@@ -86,11 +86,11 @@ export class Solid extends Particle{
 export class Powder extends Moveable{
     constructor(position:Vector2){
         super(position);
-        if (Math.random() < 0.6) {
-            this.color = "yellow";
-        } else {
-            this.color = "khaki";
-        }
+        this.color = 'rgb(' + [
+            Math.floor(240 + Math.random() *  16),
+            Math.floor(230 + Math.random() *  26),
+            Math.floor(  0 + Math.random() * 140),
+        ].join(',') + ')';
         this.weight = 2;
     }
 
@@ -116,14 +116,15 @@ export class Powder extends Moveable{
 export class Fluid extends Moveable{
     constructor(position:Vector2){
         super(position);
-        if (Math.random() < 0.6) {
-            this.color = "aqua";
-        } else {
-            this.color = "lightseagreen";
-        }
+        this.color = 'rgb(' + [
+            Math.floor(  0 + Math.random() * 33),
+            Math.floor(178 + Math.random() * 78),
+            Math.floor(170 + Math.random() * 86),
+        ].join(',') + ')';
+        this.weight = 1;
     }
 
-    canSwapWith(other:Moveable) {
+    shouldSwapWith(other:Moveable) {
         return other.weight < this.weight ||
             other.weight == this.weight && other instanceof Fluid && Math.random() <= 0.001;
     }
