@@ -1,6 +1,6 @@
 import { Vector2 } from "../Canvas-Engine/src/engine/base_types";
 import {Drawable} from "../Canvas-Engine/src/engine/object2D";
-import {Particle} from "./particle";
+import {Particle, Moveable} from "./particle";
 import {Renderer} from "./render";
 import {Physics} from "./physics";
 
@@ -15,21 +15,31 @@ export class World{
         }
     }
 
-    [Symbol.iterator] = () => {      
-        let i = WorldSize.x * WorldSize.y - 1;
-
+    [Symbol.iterator] = () : Iterator<Particle> => {
+        let y : number = WorldSize.y;
+        let particles : Array<Particle> = [];
         return{
-            next:()=>{
-                let done = (i < 0);
+            next:(): IteratorResult<Particle> => {
+                while (y > 0 && particles.length === 0) {
+                    y--;
+                    for (let x = 0; x < WorldSize.x; ++x) {
+                        let p = this.particles[y][x]
+                        if (p instanceof Particle) {
+                            particles.push(p);
+                        }
+                    }
+                }
+                let done = (particles.length === 0);
                 if(done){
-                    return {done: true};
+                    return {done: true, value: undefined};
                 } else {
-                    let y = Math.floor(i/WorldSize.x);
-                    let x = i % WorldSize.x;
-                    i -= 1;
+                    let i = Math.floor(Math.random() * particles.length);
+                    let p = particles[i];
+                    particles[i] = particles[particles.length - 1];
+                    particles.length--;
                     return{
                         done: false,
-                        value: this.particles[y][x]
+                        value: p
                     }
                 }
             }
